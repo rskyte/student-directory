@@ -6,7 +6,7 @@ def input_students
   students = []
   name = gets.chomp
   while !name.empty? do
-    students << {name: name, cohort: :november}
+    students << {name: name, cohort: :november, hobbies: 'things', birth_country: 'place', height: 0}
     puts students.count == 1 ? "Now we have #{students.count} student" : "Now we have #{students.count} students"
     name = gets.chomp
   end
@@ -39,7 +39,7 @@ end
 
 def print(students)
   students.each_with_index do |student, index|
-    puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)" if (mod(student[:name]) == true)
+    puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)".center(40) if (mod(student[:name]) == true)
   end
 end
 
