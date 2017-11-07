@@ -1,5 +1,5 @@
 $mod_mode = 0
-#put students in array
+
 def input_students 
   puts "Please enter the names of the students"
   puts "To finish just hit return twice"
@@ -46,7 +46,7 @@ end
 def print_footer(names)
   puts "Overall, we have #{names.count} great students!"
 end
-#nothing happens until we call the methods
+
 students = input_students
 print_header
 print(students)
