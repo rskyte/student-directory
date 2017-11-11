@@ -8,7 +8,7 @@ def input_students
   inp = gets.delete "\n"
   input = inp.split("/")
   while !input.empty? do
-    students << {name: input[0], cohort: (input[1] ? input[1].downcase.to_sym : :noCohortData), hobbies: 'things', birth_country: 'place', height: 0}
+    students << {name: input[0], cohort: (input[1] ? input[1].downcase.to_sym : :unassigned), hobbies: 'things', birth_country: 'place', height: 0}
     puts students.count == 1 ? "Now we have 1 student" : "Now we have #{students.count} students"
     input = gets.chomp.split("/")
   end
@@ -45,17 +45,22 @@ def print_header
 end
 
 def print(students)
-  students.each_with_index do |student, index|
-    puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)".center(40) if (mod(student) == true)
+  if !students.empty?
+    print_header
+    students.each_with_index do |student, index|
+      puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)".center(40) if (mod(student) == true)
+    end
+    print_footer(students)
+  else
+    puts "No student data"
   end
 end
 
-def print_footer(names)
-  puts "Overall, we have #{names.count} great students!"
+def print_footer(students)
+  puts students.count == 1 ? "Overall, we have 1 great student!" : "Overall, we have #{students.count} great students"
 end
 
 students = input_students
-print_header
 print(students)
-print_footer(students)
+
 
