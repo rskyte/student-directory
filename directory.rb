@@ -2,11 +2,10 @@ $mod_mode = 0
 
 def input_students 
   puts "Please enter the names of the students and their cohorts"
-  puts "Use this format 'Namey McName/cohort"
+  puts "Use this format 'Namey McName/cohort'"
   puts "To finish just hit return twice"
   students = []
-  inp = gets.delete "\n"
-  input = inp.split("/")
+  input = gets.chomp.split("/")
   while !input.empty? do
     students << {name: input[0], cohort: (input[1] ? input[1].downcase.to_sym : :unassigned), hobbies: 'things', birth_country: 'place', height: 0}
     puts students.count == 1 ? "Now we have 1 student" : "Now we have #{students.count} students"
@@ -60,7 +59,27 @@ def print_footer(students)
   puts students.count == 1 ? "Overall, we have 1 great student!" : "Overall, we have #{students.count} great students"
 end
 
-students = input_students
-print(students)
+def interactive_menu
+  students = []
+  loop do
+    puts "Student directory menu:"
+    puts "1. Input students"
+    puts "2. Show the students"
+    puts "9. Exit"
+    selection = gets.chomp
+    case selection
+      when "1"
+        students = input_students
+      when "2"
+        print(students)
+      when "9"
+        exit
+      else
+        puts "Invalid command"
+    end
+  end
+end
+
+interactive_menu
 
 
