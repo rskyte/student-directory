@@ -1,14 +1,15 @@
-$mod_mode = 0
+$mod_mode = 0  #change criteria for printing student list
+@students = []
+@modifier = "" #specifier for printing student list criteria
+@mod_list = [] #student list returned after applying mods
 
 def input_students 
   puts "Please enter the names of the students and their cohorts"
-  puts "Use this format 'Namey McName/cohort'"
+  puts "Use this format 'Namey McName,cohort'"
   puts "To finish just hit return twice"
-  input = gets.chomp.split("/")
-  while !input.empty? do
-    @students << {name: input[0], cohort: (input[1] ? input[1].downcase.to_sym : :unassigned), hobbies: 'things', birth_country: 'place', height: 0}
+  loop do
+    return if populate_student_array == 0
     puts @students.count == 1 ? "Now we have 1 student" : "Now we have #{@students.count} students"
-    input = gets.chomp.split("/")
   end
 end
 
@@ -40,12 +41,10 @@ def print_footer
 end
 
 def interactive_menu
-  @students = []
-  @modifier = ""
-  @mod_list = []
+  try_load_students
   loop do
     print_menu
-    process(gets.chomp)
+    process(STDIN.gets.chomp)
   end
 end
 
@@ -71,7 +70,7 @@ end
 
 def mod_select
   print_mod_menu
-  mod_process(gets.chomp)
+  mod_process(STDIN.gets.chomp)
 end
 
 def mod_process(selection)
@@ -81,15 +80,15 @@ def mod_process(selection)
     when "1"
       $mod_mode = 1
       puts "Choose a letter to sort by (a - z):"
-      @modifier = gets.chomp.downcase
+      @modifier = STDIN.gets.chomp.downcase
     when "2"
       $mod_mode = 2
       puts "Choose name length to sort by (as integer):"
-      @modifier = gets.chomp
+      @modifier = STDIN.gets.chomp
     when "3"
       $mod_mode = 3
       puts "Choose a cohort:"
-      @modifier = gets.chomp
+      @modifier = STDIN.gets.chomp
     else
       puts "Invalid command"
   end
@@ -131,13 +130,34 @@ def save_students
   file.close
 end
   
-def load_students
-  file = File.open("students.csv", "r")
+def load_students(filename = "students.csv")
+  file = File.open(filename, "r")
   file.readlines.each do |line|
-    name, cohort = line.chomp.split(",")
-    @students << {name: name, cohort: cohort.to_sym}
+    populate_student_array(line)
   end
   file.close
+end
+
+def try_load_students
+  filename = ARGV.first
+  if filename.nil?
+    load_students
+    return
+  end
+  if File.exists?(filename)
+    load_students(filename)
+    puts "Loaded #{@students.count} from #{filename}"
+  else
+    puts "#{filename} doesn't exist"
+    exit
+  end
+end
+
+def populate_student_array(input = STDIN.gets)
+  name, cohort = input.chomp.split(",")
+  return 0 if name.nil?
+  cohort = "unassigned" if cohort.nil?
+  @students << {name: name, cohort: cohort.downcase.to_sym, hobbies: 'things', birth_country: 'place', height: 0}
 end
 
 interactive_menu
