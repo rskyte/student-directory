@@ -110,9 +110,11 @@ def process(selection)
     when "2"
       show_students
     when "3"
-      save_students
+      puts "Choose a file name(hit enter to use default):"
+      save_students(STDIN.gets.chomp)
     when "4"
-      load_students
+      puts "Choose a file to load:"
+      try_load_students(STDIN.gets.chomp)
     when "9"
       exit
     else
@@ -120,8 +122,8 @@ def process(selection)
   end
 end
     
-def save_students
-  File.open("students.csv", "w") do |f|
+def save_students(filename = "students")
+  File.open("#{filename}.csv", "w") do |f|
     @students.each do |student|
       student_data = [student[:name], student[:cohort]]
       csv_line = student_data.join(",")
@@ -140,8 +142,7 @@ def load_students(filename = "students.csv")
   puts "Data loaded successfully"
 end
 
-def try_load_students
-  filename = ARGV.first
+def try_load_students(filename = ARGV.first)
   if filename.nil?
     load_students
     return
@@ -150,8 +151,8 @@ def try_load_students
     load_students(filename)
     puts "Loaded #{@students.count} from #{filename}"
   else
-    puts "#{filename} doesn't exist"
-    exit
+    puts "File '#{filename}' doesn't exist"
+    return
   end
 end
 
