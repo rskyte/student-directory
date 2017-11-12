@@ -128,6 +128,7 @@ def save_students
       f.puts csv_line
     end
   end
+  puts "Data saved"
 end
   
 def load_students(filename = "students.csv")
@@ -136,6 +137,7 @@ def load_students(filename = "students.csv")
       populate_student_array(line)
     end
   end
+  puts "Data loaded successfully"
 end
 
 def try_load_students
