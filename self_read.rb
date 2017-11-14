@@ -1,0 +1,1 @@
+File.open($0, "r") {|f| f.readlines.each {|line| puts line}}
