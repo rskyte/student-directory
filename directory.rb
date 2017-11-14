@@ -1,3 +1,5 @@
+require 'csv'
+
 $mod_mode = 0  #change criteria for printing student list
 @students = []
 @modifier = "" #specifier for printing student list criteria
@@ -123,21 +125,18 @@ def process(selection)
 end
     
 def save_students(filename = "students")
-  File.open("#{filename}.csv", "w") do |f|
+  CSV.open("#{filename}.csv", "wb") do |csv|
     @students.each do |student|
       student_data = [student[:name], student[:cohort]]
-      csv_line = student_data.join(",")
-      f.puts csv_line
+      csv << student_data.join(",")
     end
   end
-  puts "Data saved"
+  puts "Data saved in file #{filename}.csv"
 end
   
 def load_students(filename = "students.csv")
-  File.open(filename, "r") do |f|
-    f.readlines.each do |line|
-      populate_student_array(line)
-    end
+  CSV.foreach(filename) do |line|
+    populate_student_array(line)
   end
   puts "Data loaded successfully"
 end
